@@ -12,14 +12,16 @@ $data = json_decode(file_get_contents("php://input"),true); //Clean retrieve dat
     $password=$data["userPasword"];
     $encrpasw=sha1($password);
     $sql="SELECT userEmail, userPasword FROM userdata
-    WHERE userEmail='$useremail'";
+    WHERE userEmail='$useremail' and userPasword='$encrpasw'";
     $result=mysqli_query($conn, $sql);
+    //die(print_r($result));
     $fetch=mysqli_fetch_assoc($result);
+    
         if(mysqli_num_rows($result)>0)
         {
             //$fetch=mysqli_fetch_assoc($result);
-            if($fetch['userEmail'] == $useremail && $fetch['userPasword']==$encrpasw)
-            {
+            // if($fetch['userEmail'] == $useremail && $fetch['userPasword']==$encrpasw)
+            // {
                 if(!isset($_COOKIE['token']))
                 {
                     setcookie('token', $tokenval, time() +30, "/");
@@ -31,19 +33,15 @@ $data = json_decode(file_get_contents("php://input"),true); //Clean retrieve dat
                 {
                     echo json_encode(array('message' => 'You are already login!','status' => 'false'));
                 }
-            }
-            else
-            {
-                echo json_encode(array('message' => 'Email/pasword is incorrect','status' => 'false'));
-            }
+            // }
+            // else
+            // {
+            //     echo json_encode(array('message' => 'Email/pasword is incorrect','status' => 'false'));
+            // }
         }
-    else 
-    {
-    //to convert in accociated array for json format
-    echo json_encode(array('message' => 'No Data Available', 'status' => 'false'));
-    }
-    //     }
-    // else
-    //     {
-    //         
+        else 
+        {
+        //to convert in accociated array for json format
+        echo json_encode(array('message' => 'No Data Available! Email/Pasword incorrect', 'status' => 'false'));
+        }         
 ?>
